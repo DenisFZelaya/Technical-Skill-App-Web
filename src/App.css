@@ -27,3 +27,11 @@
 .App-link {
   color: #61dafb;
 }
+
+.nav-movil {
+  max-width: 15px;
+}
+
+.size-1 {
+  transform: scale(1.1);
+}
