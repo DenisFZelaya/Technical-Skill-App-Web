@@ -1,9 +1,91 @@
 import React, { Component } from "react";
+import { Registrer as Registrar } from './Helper';
 
 export default class Registrer extends Component {
+
   editarSeccion = () => {
     this.props.cambiarSeccion("login");
   };
+
+  nameUserRef = React.createRef();
+  emailRef = React.createRef();
+  userNameRef = React.createRef();
+  passRef1 = React.createRef();
+  passRef2 = React.createRef();
+
+  crearUser = (e) => {
+    e.preventDefault();
+
+    const nameUser = this.nameUserRef.current.value;
+    const email = this.emailRef.current.value;
+    const userName =  this.userNameRef.current.value;
+    const pass = this.passRef1.current.value;
+
+    if(this.passRef1.current.value === this.passRef2.current.value) {
+     
+      const newUser = Registrar(nameUser, email, userName, pass);
+
+      if(newUser) {
+        const Swal = require('sweetalert2');
+        Swal.fire({
+          title: 'YEAH!!!',
+          text: "User created successfully, you can login with your credentials.",
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, Login!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.editarSeccion()
+          }
+        })
+
+
+      } else {
+        //NO SE PUDO CREAR LA CUENTA
+        const Swal = require('sweetalert2');
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'bottom',
+          showConfirmButton: true,
+          timer: 4000,
+          timerProgressBar: false,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        
+        Toast.fire({
+          icon: 'error',
+          title: 'User could not be created, verify your data.'
+        })
+
+      }
+
+    } else {
+      const Swal = require('sweetalert2');
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: false,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+      
+      Toast.fire({
+        icon: 'error',
+        title: 'Passwords do not match.'
+      })
+    }
+
+
+  }
 
   render() {
     return (
@@ -30,8 +112,9 @@ export default class Registrer extends Component {
                   Full Name
                 </label>
                 <input
+                  ref={this.nameUserRef}
                   id="email-address"
-                  name="email"
+                  name="nameuser"
                   type="text"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -43,12 +126,13 @@ export default class Registrer extends Component {
                   Email
                 </label>
                 <input
+                ref={this.emailRef}
                   id="email-address"
                   name="email"
-                  type="text"
+                  type="email"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Name User"
+                  placeholder="Email"
                 />
               </div>
               <div className=" shadow-sm -space-y-px">
@@ -57,12 +141,13 @@ export default class Registrer extends Component {
                     User Name
                   </label>
                   <input
+                    ref={this.userNameRef}
                     id="password"
                     name="password"
                     type="email"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    placeholder="Email"
+                    placeholder="Username"
                   />
                 </div>
               </div>
@@ -73,6 +158,7 @@ export default class Registrer extends Component {
                     Password
                   </label>
                   <input
+                  ref={this.passRef1}
                     id="email-address"
                     name="email"
                     type="password"
@@ -83,6 +169,7 @@ export default class Registrer extends Component {
                 </div>
                 <div>
                   <input
+                  ref={this.passRef2}
                     id="password"
                     name="password"
                     type="password"
@@ -95,6 +182,7 @@ export default class Registrer extends Component {
 
               <div className="divide-y-2 divide-dashed md:divide-solid">
                 <button
+                onClick={this.crearUser}
                   type="submit"
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >

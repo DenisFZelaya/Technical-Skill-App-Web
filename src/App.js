@@ -1,6 +1,5 @@
 import React from 'react';
 import MenuPrincipal from './components/MenuPrincipal.jsx';
-import Login from './components/Login.jsx';
 import AccessUser from './components/AccessUser.jsx';
 
 class App extends React.Component {
@@ -23,10 +22,19 @@ class App extends React.Component {
 
   }
 
+  reiniciarState = () => {
+    this.setState({
+      'login' : false,
+      'dataUser' : {}
+    })
+  }
+
   do = () => {
     if(this.state.login === true){
       return <MenuPrincipal 
-      dataUser = {this.state.dataUser}/>
+      dataUser = {this.state.dataUser}
+      reiniciarState = {this.reiniciarState}
+      />
     } else {
       return <AccessUser 
       toFillUser={this.toFillUser}/>

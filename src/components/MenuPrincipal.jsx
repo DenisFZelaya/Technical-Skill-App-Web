@@ -3,8 +3,12 @@ import imgToDo from "../img/to-do.png";
 import imgInProgress from "../img/in-progress.png";
 import imgFinish from "../img/finish.png";
 import Skill from "./Skill.jsx";
-import { mostrarSkills } from "./Helper";
+import { mostrarSkills, crearSkills } from "./Helper";
 import NavMovil from "./NavMovil";
+import imgUser from "../img/User_Circle.png";
+import "./dropdown.css";
+import menuClose from "../img/close.png";
+import menuLinke from "../img/linke.png";
 
 export default class MenuPrincipal extends Component {
   state = {
@@ -25,6 +29,127 @@ export default class MenuPrincipal extends Component {
     });
   };
 
+  cerrarSesion = () => {
+    const Swal = require("sweetalert2");
+    Swal.fire({
+      title: "Log out?",
+      text: "You will exit the current session.!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, exit!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //reiniciar el estate
+        this.props.reiniciarState();
+        Swal.fire("Log out success!", "You have signed out.", "success");
+      }
+    });
+  };
+
+  updateState = (action, uidStateAnt, uidStateNew, uidSkill, unombreSkill) => {
+    if (action === "delete") {
+      if (uidStateAnt === 1) {
+        if (uidStateNew === 1) {
+          //no hacer nada
+        } else if (uidStateNew === 2) {
+          //Eliminar del state 1 y agregar en el state 2
+        } else if (uidStateNew === 3) {
+        }
+      } else if (uidStateAnt === 2) {
+        if (uidStateNew === 1) {
+        } else if (uidStateNew === 2) {
+        } else if (uidStateNew === 3) {
+        }
+      } else if (uidStateAnt === 3) {
+        if (uidStateNew === 1) {
+        } else if (uidStateNew === 2) {
+        } else if (uidStateNew === 3) {
+        }
+      }
+    } else if (action === "update") {
+    }
+  };
+
+  agregarSkill = () => {
+    const Swal = require("sweetalert2");
+    const { value: formValues } = Swal.fire({
+      title: "Create Technical Skill",
+      html:
+        '<input id="swal-input1" class="swal2-input p-2 w-1/1">' +
+        "<br>" +
+        '<select id="estado" class="p-2">' +
+        '<option value="none" disabled>Select a state</option>' +
+        '<option value="1">To Do</option>' +
+        '<option value="2">In Progress </option>' +
+        '<option value="3">Finish</option>' +
+        "</select>",
+
+      focusConfirm: false,
+      preConfirm: () => {
+        var select = document.getElementById("estado").value;
+
+        const create = {};
+
+        create.cNameSkill = document.getElementById("swal-input1").value;
+        create.CidUser = this.props.dataUser.id;
+        create.CidState = select;
+
+        const crear = crearSkills(
+          create.cNameSkill,
+          create.CidUser,
+          create.CidState
+        );
+
+        if (crear) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: "success",
+            title:
+              "Task Skill " + create.cNameSkill + " created successfully. ",
+          });
+          this.componentDidMount();
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: "success",
+            title:
+              "Your technical skill: " +
+              "'" +
+              create.cNameSkill +
+              "'" +
+              " has not been created.",
+          });
+        }
+      },
+    });
+
+    if (formValues) {
+      Swal.fire(JSON.stringify(formValues));
+    }
+  };
+
   render() {
     return (
       <div>
@@ -41,123 +166,60 @@ export default class MenuPrincipal extends Component {
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
-                    <a
-                      href="#"
+                    <h1
+        
                       className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900"
+              
                     >
-                      Tecnical Skill App
-                    </a>
+                      Tecnical Skill App - {this.props.dataUser.nombre}
+                    </h1>
                   </div>
                 </div>
               </div>
-              <div className="hidden md:block">
-                <div className="ml-4 flex items-center md:ml-6">
-                  <button className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                    <span className="sr-only">View notifications</span>
 
-                    <svg
-                      className="h-6 w-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                      />
-                    </svg>
-                  </button>
-
-                  {
-                    // <!-- Profile dropdown -->
-                  }
-                  <div className="ml-3 relative">
-                    <div>
+              <div className="ml-4 flex items-center md:ml-6">
+                {
+                  // <!-- Profile dropdown -->
+                }
+                <div className="ml-3 relative">
+                  <div>
+                    <div className="dropdown w-50">
                       <button
                         className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                         id="user-menu"
                         aria-haspopup="true"
                       >
-                        <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          src={imgUser}
                           alt=""
                         />
                       </button>
+                      <ul className="dropdown-menu hidden text-gray-700 pt-1 bg-green-400 rounded p-3 lg:absolute">
+                        <hr className="pt-3 hr" />
+                        <h1> {this.props.dataUser.nombre}</h1>
+                        <hr />
+                        <li className="">
+                          <button
+                            onClick={this.cerrarSesion}
+                            className="flex w-full rounded-t bg-green-400 hover:bg-green-200 py-2 px-4 block whitespace-no-wrap"
+                          >
+                            <img className="pr-1" src={menuClose} alt='imgClose'></img> Close
+                          </button>
+                        </li>
+                        <li className="">
+                          <a
+                            className=" flex justify-center bg-green-400 hover:bg-green-200 py-2 px-4 block whitespace-no-wrap"
+                            target="_blank" rel="noopener noreferrer"
+                            href="https://www.linkedin.com/in/denis-federico-zelaya-407409197"
+                          >
+                            <img className="pr-1" src={menuLinke} alt='imgLinkedIn'></img> Contact
+                          </a>
+                        </li>
+                      </ul>
                     </div>
-                    {/*             <!--
-                Profile dropdown panel, show/hide based on dropdown state.
-
-                Entering: "transition ease-out duration-100"
-                  From: "transform opacity-0 scale-95"
-                  To: "transform opacity-100 scale-100"
-                Leaving: "transition ease-in duration-75"
-                  From: "transform opacity-100 scale-100"
-                  To: "transform opacity-0 scale-95"
---> */}
-                    {/*
-              <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" >
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
-
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
-
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
-</div> */}
                   </div>
                 </div>
-              </div>
-              <div className="-mr-2 flex md:hidden">
-                {
-                  //<!-- Mobile menu button -->
-                }
-                <button className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                  <span className="sr-only">Open main menu</span>
-                  {/*           <!--
-              Heroicon name: menu
-
-              Menu open: "hidden", Menu closed: "block"
---> */}
-                  <svg
-                    className="block h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                  {/*          <!--
-              Heroicon name: x
-
-              Menu open: "block", Menu closed: "hidden"
-            -->*/}
-                  <svg
-                    className="hidden h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
               </div>
             </div>
           </div>
@@ -167,87 +229,8 @@ export default class MenuPrincipal extends Component {
 
       Open: "block", closed: "hidden"
 --> */}
-          <div className="hidden md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a
-                href="#"
-                className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900"
-              >
-                Dashboard
-              </a>
-            </div>
-            <div className="pt-4 pb-3 border-t border-gray-700">
-              <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium leading-none text-white">
-                    Tom Cook
-                  </div>
-                  <div className="text-sm font-medium leading-none text-gray-400">
-                    tom@example.com
-                  </div>
-                </div>
-                <button className="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                  <span className="sr-only">View notifications</span>
-                  {
-                    // <!-- Heroicon name: bell -->
-                  }
-                  <svg
-                    className="h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="mt-3 px-2 space-y-1">
-                <a
-                  href="#"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                >
-                  Your Profile
-                </a>
-
-                <a
-                  href="#"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                >
-                  Settings
-                </a>
-
-                <a
-                  href="#"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                >
-                  Sign out
-                </a>
-              </div>
-            </div>
-          </div>
         </nav>
 
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h3 className="text-3xl font-bold leading-tight text-gray-900">
-              Dashboard
-            </h3>
-          </div>
-        </header>
         <main>
           <section className="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4">
             <header className="flex items-center justify-between">
@@ -272,7 +255,10 @@ export default class MenuPrincipal extends Component {
                 />
               </form>
 
-              <button className="bg-green-300   transition ease-in duration-200  group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2 hover:bg-green-200 hover:shadow-lg ">
+              <button
+                onClick={this.agregarSkill}
+                className="bg-green-300   transition ease-in duration-200  group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2 hover:bg-green-200 hover:shadow-lg "
+              >
                 <svg
                   className="group-hover:text-light-blue-600 text-light-blue-500 mr-2"
                   width="12"
@@ -310,6 +296,7 @@ export default class MenuPrincipal extends Component {
                       idUser={parseInt(this.props.dataUser.id)}
                       idState={1}
                       img={imgToDo}
+                      componentDidMount={this.componentDidMount}
                     />
                   ))}
 
@@ -330,6 +317,7 @@ export default class MenuPrincipal extends Component {
                       idUser={parseInt(this.props.dataUser.id)}
                       idState={2}
                       img={imgInProgress}
+                      componentDidMount={this.componentDidMount}
                     />
                   ))}
                   {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}
@@ -351,6 +339,7 @@ export default class MenuPrincipal extends Component {
                       idUser={parseInt(this.props.dataUser.id)}
                       idState={3}
                       img={imgFinish}
+                      componentDidMount={this.componentDidMount}
                     />
                   ))}
                   {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}

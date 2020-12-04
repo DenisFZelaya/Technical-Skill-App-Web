@@ -6,23 +6,51 @@ export default class login extends Component {
   emailRef = React.createRef();
   claveRef = React.createRef();
 
+
+  //Funcion que toma los datos del formulario
   obtenerUsuario = (e) => {
     e.preventDefault();
 
+    //Guardar el resultado de la funcion externa Login en dataUser
     const dataUser = Login(
       this.emailRef.current.value,
       this.claveRef.current.value
     );
+
+    //Hacer si el usuario es correcto
     if (dataUser.answer === "correct") {
+      //Alerta bienvenida al iniciar sesion
+      const Swal = require('sweetalert2');
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+      
+      Toast.fire({
+        icon: 'success',
+        title: 'Welcome ' + dataUser.nameUser
+      })
+
+      //Enviar datos a la funcion que llena los datos en el Access User
       this.props.toFillUser(dataUser.idUser, dataUser.nameUser);
+
+      //hacer si la clave del usuario es incorrecto
     } else if (dataUser.answer === "keysIncorrect") {
       console.log("Contrase;a es incorrecta");
       alertError('<strong>Key Incorrect</strong>');
     } else {
+      //Si no coincide la contrase;a o email
       alertError('<strong>User or Key Incorrect</strong>');
     }
   };
 
+  //cambiar el state section para imprimir el componente
   editarSeccion = () => {
     this.props.cambiarSeccion("registrer");
   };
@@ -110,9 +138,9 @@ export default class login extends Component {
                 </div>
 
                 <div className="text-sm">
-                  <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                  <h1 className="font-medium text-indigo-600 hover:text-indigo-500">
                     Forgot your password?
-                  </a>
+                  </h1>
                 </div>
               </div>
               <div className="flex justify-center">

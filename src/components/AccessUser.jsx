@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Login from "./Login.jsx";
 import Registrer from "./Registrer.jsx";
 import infoLogo from '../img/info.png';
+import imgLinkedin from '../img/SocialNet/linkedin.png';
 
 export default class AccessUser extends Component {
 
@@ -9,12 +10,14 @@ export default class AccessUser extends Component {
     'section' : 'login'
   }
 
+  //Funcion para cambiar la seccion puede ser login o registrer
   cambiarSeccion = (seccion) => {
     this.setState({
       'section' : seccion
     })
   }
 
+  //Mostrar componente login o registro segun el state
   section = () => {
     if(this.state.section === 'login') {
       return <Login 
@@ -31,6 +34,7 @@ export default class AccessUser extends Component {
     return (
       <div class="grid grid-cols-1  bg-gray-50   sm:grid-cols-2 gap-1">
         <section id="inicio" data-aos="fade-up">
+          
           <div class="">
             <div className="flex items-center justify-center bg-gray-50   py-5 px-4  sm:px-6 py-12 min-h-screen float-right  py-0 px-0 lg:px-8 ">
               <div className="max-w-md w-full space-y-8    ">
@@ -38,6 +42,10 @@ export default class AccessUser extends Component {
                   <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 pb-5">
                     Technical Skills App
                   </h2>
+                  <a className='flex justify-center pt-2' target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/denis-federico-zelaya-407409197' >
+                      <img src={imgLinkedin} alt='LinkedIn'></img>
+                  </a>
+                  <a className='flex justify-center pb-2' target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/denis-federico-zelaya-407409197'>Dev. Denis Federico Zelaya</a>
 
                   <img
                     className=" md:desocultar  "
@@ -48,6 +56,9 @@ export default class AccessUser extends Component {
                     Thought in the Kamban model to control your technical
                     skills.
                   </p>
+             
+    
+         
                 </div>
                 <div className="text-sm sm:invisible ">
                   <a
@@ -76,6 +87,7 @@ export default class AccessUser extends Component {
           </div>
         </section>
         <div class="w-100">
+          {/* Imprimir la seccion login/registrer segun el state */}
           {this.section()}
         </div>
       </div>

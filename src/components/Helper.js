@@ -1,6 +1,26 @@
 
 //Loguear Usuarios
 function Login(email, clave) {
+
+          //Alerta bienvenida al iniciar sesion
+          const Swal = require('sweetalert2');
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'center',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({
+            icon: 'success',
+            title: 'Verificando '
+          })
+
     var datos = new FormData();
     datos.append('user', email);
     datos.append('pass', clave);
@@ -99,8 +119,6 @@ function eliminarSkills(idUser, IdSkill) {
     xhr.onload = function ()
     {
         if (this.status === 200) {
-            var respuesta = JSON.parse(xhr.responseText);
-            console.log(respuesta);
         }
     }
     xhr.send(datos);
