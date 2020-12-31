@@ -106,6 +106,9 @@ export default class Skill extends Component {
         }
       },
     });
+    if (formValues) {
+      Swal.fire(JSON.stringify(formValues));
+    }
   };
 
   deleteSkill = () => {
@@ -173,7 +176,7 @@ export default class Skill extends Component {
         </div>
         <form className="flex-auto p-2">
           <div className="flex flex-wrap">
-            <h1 className="flex-auto text-xl font-semibold">
+            <h1 className="flex-auto text-xl font-semibold pt-5">
               {this.props.nombreSkill}
             </h1>
             <div className="w-full flex-none text-sm font-medium text-gray-500 mt-2">
@@ -185,7 +188,7 @@ export default class Skill extends Component {
               <button
                 onClick={this.editSkill}
                 className="w-1/2 flex items-center justify-center rounded-md bg-blue-300 text-white p-2 hover:shadow-sm"
-                type="submit"
+                type="button"
               >
                 Edit
               </button>
