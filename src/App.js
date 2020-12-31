@@ -10,8 +10,29 @@ class App extends React.Component {
     'dataUser': {}
   }
 
+  componentDidMount = () => {
+    if(localStorage.getItem('nombre')) {
+      const user = {};
+      user.id = localStorage.getItem('id')
+      user.nombre = localStorage.getItem('nombre')
+
+      this.setState({
+        'login': true,
+        'dataUser': {
+          'id': user.id,
+          'nombre': user.nombre
+        }
+      })
+    }
+  }
+
   //Funcion para guardar el usuario en el state
   toFillUser = (idUser, nameUser) => {
+
+    localStorage.setItem('login', true);
+    localStorage.setItem('id', idUser);
+    localStorage.setItem('nombre', nameUser);
+
     this.setState({
       'login': true,
       'dataUser': {
@@ -27,6 +48,8 @@ class App extends React.Component {
       'login' : false,
       'dataUser' : {}
     })
+
+    localStorage.clear();
   }
 
   do = () => {
