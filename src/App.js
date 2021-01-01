@@ -43,12 +43,12 @@ class App extends React.Component {
 
   }
 
+  {/* Elimina el state y elimina el localstorage */}
   reiniciarState = () => {
     this.setState({
       'login' : false,
       'dataUser' : {}
     })
-
     localStorage.clear();
   }
 
